@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { fromPromise } from "rxjs/internal-compatibility";
 import { Observable } from "rxjs/internal/Observable";
-import { map, tap } from "rxjs/operators";
+import { filter, map, tap } from "rxjs/operators";
 import { Course } from "../model/course";
 import { createHttpObservable } from "./util";
 
@@ -43,7 +43,8 @@ export class Store {
 
     selectCourseById(courseId: number) {
         return this.courses$.pipe(
-            map(courses => courses.find(course => course.id == courseId))
+            map(courses => courses.find(course => course.id == courseId)),
+            filter(course => !!course)
         )
     }
 
