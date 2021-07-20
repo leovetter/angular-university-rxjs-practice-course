@@ -15,6 +15,7 @@ import {
 } from 'rxjs/operators';
 import {merge, fromEvent, Observable, concat} from 'rxjs';
 import {Lesson} from '../model/lesson';
+import { Store } from '../common/store.service';
 
 
 @Component({
@@ -29,7 +30,8 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     @ViewChild('searchInput', { static: true }) input: ElementRef;
 
-    constructor(private route: ActivatedRoute) {
+    constructor(private route: ActivatedRoute,
+                private store: Store) {
 
 
     }
@@ -38,7 +40,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
         const courseId = this.route.snapshot.params['id'];
 
-
+        this.course$ = this.store.selectCourseById(courseId);
 
     }
 
