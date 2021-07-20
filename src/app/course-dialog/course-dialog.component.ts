@@ -34,13 +34,17 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
             releasedAt: [moment(), Validators.required],
             longDescription: [course.longDescription,Validators.required]
         });
-
     }
 
     ngOnInit() {
 
+        /**
+         * Emit a new value each time the form changes
+         */
         this.form.valueChanges.pipe(
+            // Emit only if the form is valid
             filter(() => this.form.valid),
+            // Map values to inner observable, subscribe and emit in order.
             concatMap(changes => this.saveCourse(changes))
         ).subscribe();
     }

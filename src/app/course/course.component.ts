@@ -36,13 +36,21 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
 
+        // Get the course id
         this.courseId = this.route.snapshot.params['id'];
 
-        this.course$ = createHttpObservable(`/api/courses/${this.courseId}`).pipe(map(res => res as Course));
+        // Create observable from request
+        this.course$ = createHttpObservable(`/api/courses/${this.courseId}`).pipe(
+            map(res => res as Course)
+        );
 
         const lessons$ = this.loadLessons();
 
-        forkJoin(this.course$, lessons$)
+        /**
+         * When the two observables completes
+         * emit the last emitted values from each
+         */
+        forkJoin([this.course$, lessons$])
         .pipe(
             tap(([course, lessons]) => {
 
@@ -57,17 +65,28 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
+        // Create an observable from a keyup event on the input
         const searchLessons$ = fromEvent<any>(this.input.nativeElement, 'keyup').pipe(
+            // Get the value of the input
             map(event => event.target.value),
+            // Emit value '' first
             startWith(''),
             debug( /* RxJsLoggingLevel.INFO */ 0 , "search"),
+            // Discard emitted values that take less than the specified time between output
             debounceTime(400),
+            // Only emit when the current value is different than the last.
             distinctUntilChanged(),
+            // Map to observable, complete previous inner observable, emit values.
             switchMap(search => this.loadLessons(search))
         )
 
         const intitialLessons$ = this.loadLessons();
 
+        /**
+        * Concat the observables. 
+        * Next transaction (subscription) cannot start until the previous completes.
+        * The subscrition will emit the initial lessions then the search lessons
+        */
         this.lessons$ = concat(intitialLessons$, searchLessons$);
     }
 
