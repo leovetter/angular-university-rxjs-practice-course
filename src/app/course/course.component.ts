@@ -46,6 +46,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
         this.course$ = this.store.selectCourseById(this.courseId);
 
         this.loadLessons().pipe(
+            // Also provide the last value from another observable.
             withLatestFrom(this.course$)
         ).subscribe(([lessons, course]) => {
             console.log(lessons)
@@ -84,8 +85,4 @@ export class CourseComponent implements OnInit, AfterViewInit {
             map(res => res['payload'])
         );
     }
-
-
-
-
 }

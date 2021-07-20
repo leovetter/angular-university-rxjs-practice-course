@@ -19,6 +19,7 @@ export class Store {
 
         const http$ = createHttpObservable('/api/courses');
 
+        // Init the subject with value from the backend
         http$.pipe(
             tap(() => 'Http request executed'),
             map(res => Object.values(res['payload']))
@@ -36,18 +37,28 @@ export class Store {
     }
 
     filterByCategory(category: string) {
+        // Return observable that emit only course from given category
         return this.courses$.pipe(
             map(courses => courses.filter(course => course.category === category))
         );
     }
 
     selectCourseById(courseId: number) {
+        // Return observable that emit only course from given id
         return this.courses$.pipe(
             map(courses => courses.find(course => course.id == courseId)),
             filter(course => !!course)
         )
     }
 
+    /**
+     * Get the course from the subject. Edit the course with new course. 
+     * Call next on the subject with new course
+     * Edit the backend
+     * @param courseId 
+     * @param changes 
+     * @returns 
+     */
     saveCourse(courseId: number, changes) {
 
         const courses = this.subject.getValue();

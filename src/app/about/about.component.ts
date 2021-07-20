@@ -19,7 +19,7 @@ export class AboutComponent implements OnInit {
 
   behaviorSubject() {
 
-    // Create a subject
+    // Requires an initial value and emits the current value to new subscribers
     const subject = new BehaviorSubject(0);
 
     // Derive an observable from the subject
@@ -44,7 +44,7 @@ export class AboutComponent implements OnInit {
 
   asyncSubject() {
 
-    // Create a subject
+    // Emits its last value on completion
     const subject = new AsyncSubject();
 
     // Derive an observable from the subject
@@ -69,7 +69,7 @@ export class AboutComponent implements OnInit {
 
   replaySUbject() {
 
-    // Create a subject
+    // Replays" or emits old values to new subscribers
     const subject = new ReplaySubject();
 
     // Derive an observable from the subject
