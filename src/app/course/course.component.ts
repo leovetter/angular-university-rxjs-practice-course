@@ -24,10 +24,8 @@ import {Lesson} from '../model/lesson';
 })
 export class CourseComponent implements OnInit, AfterViewInit {
 
-
     course$: Observable<Course>;
     lessons$: Observable<Lesson[]>;
-
 
     @ViewChild('searchInput', { static: true }) input: ElementRef;
 
